@@ -3,7 +3,6 @@
 */
 
 $('document').ready(function() {
-
     $('.table .eBtn').on('click',function(event){
         event.preventDefault();
         var href= $(this).attr('href');
@@ -13,7 +12,6 @@ $('document').ready(function() {
             $('#lastname').val(user.lastname);
             $('#age').val(user.age);
             $('#email').val(user.email);
-//            ($("#roles").val(user.roles) || []).join('; ');
             if (user.roles.length > 1) {
                $('#roles').val([ user.roles[0].name, user.roles[1].name ]);
             }
@@ -41,22 +39,7 @@ $('document').ready(function() {
         });
         $('#deleteModal').modal();
     });
-//    var output = ($("#roles").val() || []).join(', ');
     var values = $('.editRoles').map(function() {
-//        alert(this.value);
         return this.value;
     });
-//    $('select#roles').on('change', function(evt, params) {
-//        alert(params.selected);
-//        var currentSelection;
-//        if (selectedOption) {
-//          var currentValues = $(this).val();
-//          currentSelection = currentValues.filter(function(el) {
-//            return selectedOption.indexOf(el) < 0;
-//          });
-//        }
-//        selectedOption = $(this).val();
-//        $('#roles').text(currentSelection);
-//        alert(currentSelection);
-//    });
 })
