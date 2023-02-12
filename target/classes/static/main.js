@@ -39,7 +39,4 @@ $('document').ready(function() {
         });
         $('#deleteModal').modal();
     });
-    var values = $('.editRoles').map(function() {
-        return this.value;
-    });
 })

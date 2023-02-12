@@ -74,7 +74,6 @@ public class UserController {
 
     @PostMapping("/admin/save")
     public String saveUser(User user) {
-        System.out.println(user.getRoles().toString());
         Set<Role> roleSetTemp = new HashSet<>();
         Role roleUser;
         Set<Role> rolesUser = user.getRoles();
