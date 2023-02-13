@@ -17,12 +17,24 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImp implements UserService {
+
+    private PasswordEncoder passwordEncoder;
     @Autowired
-    private final PasswordEncoder passwordEncoder;
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    private UserRepository userRepository;
     @Autowired
-    private final UserRepository userRepository;
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    private RoleRepository roleRepository;
     @Autowired
-    private final RoleRepository roleRepository;
+    public void setRoleRepository(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
+    }
 
     public UserServiceImp(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository) {
         this.passwordEncoder = passwordEncoder;
@@ -44,9 +56,11 @@ public class UserServiceImp implements UserService {
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
     }
+
     public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
     }
+
     public User get(Long id) {
         return userRepository.findById(id);
     }
@@ -64,10 +78,12 @@ public class UserServiceImp implements UserService {
         tempUser.setRoles(user.getRoles());
         userRepository.save(tempUser);
     }
+
     private void encodePassword(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
     }
+
     @Transactional
     public void registerDefaultUser(User user) {
         User userFromDB = userRepository.findByUsername(user.getEmail());
@@ -76,18 +92,22 @@ public class UserServiceImp implements UserService {
             userRepository.saveNew(user);
         }
     }
+
     @Transactional
     public void saveNew(User user) {
         encodePassword(user);
         userRepository.saveNew(user);
     }
+
     @Transactional
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
+
     public List<User> showUsers() {
         return userRepository.findAll();
     }
+
     public List<Role> listOfRoles(User user) {
         return roleRepository.findAll(user.getEmail());
     }

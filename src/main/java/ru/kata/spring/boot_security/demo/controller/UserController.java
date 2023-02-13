@@ -8,15 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/")
 public class UserController {
     private final UserService userService;
+
     private final RoleService roleService;
 
     public UserController(UserService userService, RoleService roleService) {
@@ -60,28 +58,14 @@ public class UserController {
 
     @PostMapping("/admin/process_register")
     public String processRegister(@ModelAttribute("newuser") User newuser) {
-        Set<Role> roleSetTemp = new HashSet<>();
-        Role roleUser;
-        Set<Role> rolesUser = newuser.getRoles();
-        for (Role role : rolesUser) {
-            roleUser = roleService.findByName(role.getName());
-            roleSetTemp.add(roleUser);
-        }
-        newuser.setRoles(roleSetTemp);
+        newuser.setRoles(roleService.getNewUserRoles(newuser));
         userService.registerDefaultUser(newuser);
         return "redirect:/admin";
     }
 
     @PostMapping("/admin/save")
     public String saveUser(User user) {
-        Set<Role> roleSetTemp = new HashSet<>();
-        Role roleUser;
-        Set<Role> rolesUser = user.getRoles();
-        for (Role role : rolesUser) {
-            roleUser = roleService.findByName(role.getName());
-            roleSetTemp.add(roleUser);
-        }
-        user.setRoles(roleSetTemp);
+        user.setRoles(roleService.getNewUserRoles(user));
         userService.save(user);
         return "redirect:/admin";
     }

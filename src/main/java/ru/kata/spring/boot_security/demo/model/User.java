@@ -15,16 +15,22 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "username", length = 255)
     private String username;
+
     @Column(name = "lastname", length = 255)
     private String lastname;
+
     @Column(name = "email", unique = true, length = 255)
     private String email;
+
     @Column(name = "age")
     private int age;
+
     @Column(name = "password", nullable = false, length = 255)
     private String password;
+
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -33,6 +39,7 @@ public class User implements UserDetails {
 
     public User() {
     }
+
     public User(String username, String lastname, String email, int age, String password) {
         this.username = username;
         this.lastname = lastname;
@@ -40,45 +47,59 @@ public class User implements UserDetails {
         this.age = age;
         this.password = password;
     }
+
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getUsername() {
         return username;
     }
+
     public void setUsername(String name) {
         this.username = name;
     }
+
     public String getLastname() {
         return lastname;
     }
+
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
+
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
+
     public int getAge() {
         return age;
     }
+
     public void setAge(int age) {
         this.age = age;
     }
+
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
     public Set<Role> getRoles() {
         return roles;
     }
+
     public String getRolesStr() {
         String resultRoles = "";
         for (Role role : getRoles()) {
@@ -99,31 +120,39 @@ public class User implements UserDetails {
         }
         return resultRoles;
     }
+
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }
+
     public void addRole (Role role) {
         this.roles.add(role);
     }
+
     public void deleteRole (Role role) {
         this.roles.remove(role);
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
+
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
     public boolean isEnabled() {
         return true;

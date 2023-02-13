@@ -21,4 +21,5 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
             httpServletResponse.sendRedirect("/user");
         }
     }
+
 }
