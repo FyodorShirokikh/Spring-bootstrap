@@ -1,16 +1,12 @@
 package ru.kata.spring.boot_security.demo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,43 +14,16 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImp implements UserService {
 
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    private UserRepository userRepository;
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    private RoleRepository roleRepository;
-    @Autowired
-    public void setRoleRepository(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
-
-    public UserServiceImp(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository) {
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    public UserServiceImp(BCryptPasswordEncoder passwordEncoder, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
-
-    public User findByUsername(String email) {
-        return userRepository.findByUsername(email);
     }
 
     @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = findByUsername(email);
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("User '%s' not found", email));
-        }
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
@@ -67,7 +36,7 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     public void save(User user) {
-        User tempUser = findByUsername(user.getEmail());
+        User tempUser = findByEmail(user.getEmail());
         tempUser.setId(user.getId());
         tempUser.setUsername(user.getUsername());
         tempUser.setLastname(user.getLastname());
@@ -86,7 +55,7 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     public void registerDefaultUser(User user) {
-        User userFromDB = userRepository.findByUsername(user.getEmail());
+        User userFromDB = userRepository.findByEmail(user.getEmail());
         if (userFromDB == null) {
             encodePassword(user);
             userRepository.saveNew(user);
@@ -108,7 +77,4 @@ public class UserServiceImp implements UserService {
         return userRepository.findAll();
     }
 
-    public List<Role> listOfRoles(User user) {
-        return roleRepository.findAll(user.getEmail());
-    }
 }

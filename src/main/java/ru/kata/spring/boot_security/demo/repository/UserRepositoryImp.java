@@ -13,7 +13,7 @@ public class UserRepositoryImp implements UserRepository {
     private EntityManager entityManager;
 
     @Override
-    public User findByUsername(String email) {
+    public User findByEmail(String email) {
         try {
             Query q = entityManager.createNativeQuery("select * from Users where email = :email", User.class);
             q.setParameter("email", email);

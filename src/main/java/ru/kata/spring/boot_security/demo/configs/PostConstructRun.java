@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.configs;
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;

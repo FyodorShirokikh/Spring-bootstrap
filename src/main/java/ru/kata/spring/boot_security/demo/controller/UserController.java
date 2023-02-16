@@ -2,7 +2,6 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.service.RoleService;
@@ -14,9 +13,7 @@ import java.util.*;
 @RequestMapping("/")
 public class UserController {
     private final UserService userService;
-
     private final RoleService roleService;
-
     public UserController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
@@ -35,7 +32,7 @@ public class UserController {
     @GetMapping("/admin")
     public String showUsers(Model model, Principal principal) {
         model.addAttribute("users", userService.showUsers());
-        User user = userService.findByUsername(principal.getName());
+        User user = userService.findByEmail(principal.getName());
         model.addAttribute("user", user);
         model.addAttribute("newuser", new User());
         Set<Integer> newroles = new HashSet<>();
@@ -45,7 +42,7 @@ public class UserController {
 
     @GetMapping("/user")
     public String showUserDetails(Model model, Principal principal) {
-        User user = userService.findByUsername(principal.getName());
+        User user = userService.findByEmail(principal.getName());
         model.addAttribute("user", user);
         return "userdetails";
     }
