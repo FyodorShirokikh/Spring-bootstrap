@@ -26,7 +26,7 @@ public class UserController {
 
     @GetMapping("/access-denied")
     public String accessDeniedPage() {
-        return "access-denied";
+        return "redirect:/login";
     }
 
     @GetMapping("/admin")

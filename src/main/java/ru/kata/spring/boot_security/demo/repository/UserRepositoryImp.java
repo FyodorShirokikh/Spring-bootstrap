@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.repository;
 
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.User;
 import javax.persistence.EntityManager;
